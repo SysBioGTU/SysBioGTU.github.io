@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>FBA in R &mdash; SysBioGTU</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> SysBioGTU</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">Home</a></li>
+                    <li class="toctree-l1">
+<a class="nav-item" href="../fbaINTRO/">Introduction to Flux Balance Analysis</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fbaIMPLEMENT/">Procedure for creating a metabolic model for FBA</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fbaMATLAB/">FBA in MATLAB</a></li>
+                    <li class="toctree-l1 current">
+<a class="nav-item current" href="./">FBA in R</a>
+<ul class="subnav">
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fvaINTRO/">FVA</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="previous"><a href="../fbaMATLAB/">&laquo; Previous</a></div>
+    <div class="next"><a href="../fvaINTRO/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> SysBioGTU</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><p><strong> CONTRIBUTORS:</strong> Written: <em>Regan ODONGO</em>, Edited: <em>Tunahan ÇAKIR</em></p>
+<p><strong> Procedure for using Gurobi solver in </strong>R<strong> for FBA </strong></p>
+<p>R programming uses different file formats as is explained next. Also, this section will describe only the data acquisition to FBA using Gurobi solver steps. All the other steps should be followed as previously described.</p>
+<p>In R, data can be loaded and saved as follows:</p>
+<ul>
+<li>
+<p>Load the Excel file using <strong>stoichMat&lt;- readxl::read_excel(‘filename.xlsx’)</strong>, assuming the file is named <strong>‘filename.xlsx’</strong>. <strong>NOTE</strong>: R is dependent on packages so remember to load this package using <strong>library(readxl)</strong> before attempting to import the excel file.</p>
+</li>
+<li>
+<p>Next, use <strong>saveRDS(stoichMat,file=‘stoichMat.RDS’)</strong> to save the matrix as a <strong>.RDS</strong> file object.</p>
+</li>
+<li>
+<p>This <strong>.RDS</strong> file can be introduced into the working space memory of R using the <strong>‘readRDS’</strong> function, e.g. <strong>readRDS(‘stoichMat.RDS)</strong>.</p>
+</li>
+</ul>
+<p><strong>Note</strong> that. <strong>RData</strong> is an alternative to <strong>.RDS</strong>. However, <strong>.RDS</strong> is more suitable for storing <strong>single variables</strong> like in the current case.</p>
+<p>Using Gurobi in R</p>
+<p>First and foremost, Gurobi in <strong>R</strong> requires installation and loading to the current working memory of two main packages; <strong>‘gurobi’</strong> and <strong>‘slam’</strong> as follows:</p>
+<pre><code>        install.packages(‘c:/gurobi800/win64/R/gurobi_8.0-0.zip’, repos = NULL)
+
+        install.packages(‘slam’, repos = ‘https://cloud.r-project.org’)
+
+        library(gurobi)
+</code></pre>
+<p>The general implementation steps are as follows:</p>
+<p>
+<script type="math/tex; mode=display">sol \to gurobi(model,list())</script>
+</p>
+<p>Here, the object <strong>‘model’</strong> is an R list object with the following main fields similar to those described for <strong>MATLAB</strong>:</p>
+<ul>
+<li>
+<p><strong>model$A</strong> → An mxn matrix. the S matrix (stoichiometric matrix) must be renamed as model.A and stored as a sparse matrix. Using sparse(S) returns a sparse matrix for the S matrix.</p>
+</li>
+<li>
+<p><strong>model$obj</strong> →  An nx1 vector. The objective function vector, f, explained above must be renamed as model.obj.</p>
+</li>
+<li>
+<p><strong>model$lb</strong> → An nx1 vector. The lower bound vector.</p>
+</li>
+<li>
+<p><strong>model$ub</strong> →  An nx1 vector. The upper bound vector.</p>
+</li>
+<li>
+<p><strong>model$rhs</strong> → A zero  m×1  vector. The right-hand-side vector, b, explained above must be renamed as model.rhs.</p>
+</li>
+<li>
+<p><strong>model$vtype</strong> → An nx1 vector. It is a cell array that can be of ‘B’, ‘C’ or ‘I’ for binary, continuous and integer respectively based on the problem being solved. In FBA, all the unknowns (rates) are continuous. Therefore, all elements of model.vtype is set to ‘C’.</p>
+</li>
+<li>
+<p><strong>model$sense</strong> → An mx1 vector. It is a cell array that can be of ‘=’, ‘&lt;’ or ‘&gt;’ for equality or inequality. It defines the model equality/inequality constraint. In FBA, all the linear set of equations derived from the differential mass balances are equality equations. Therefore, all elements of model.sense is set to ‘=’.</p>
+</li>
+</ul>
+<p>For simplicity, the above object can be defined as follows in R:</p>
+<pre><code>        model = list()
+
+        model$A = S
+
+        model$obj = c(rep(0,ncol(S)))
+
+        model$lb = lb
+
+        model$ub = ub
+
+        model$rhs = c(rep(0,nrow(S)))
+
+        model$vtype = 'C'
+
+        model$sense = '='
+</code></pre>
+<p><strong>Further information on how to handle models in using Gurobi solver can be found <a href="https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html">here</a>. The output ‘sol’ is similar to the one obtained from MATLAB as described previously.</strong></p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../fbaMATLAB/" title="FBA in MATLAB"><span>Previous</span></a></div>
+        <div class="next"><a href="../fvaINTRO/" title="FVA"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

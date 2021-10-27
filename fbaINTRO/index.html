@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Introduction to Flux Balance Analysis &mdash; SysBioGTU</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> SysBioGTU</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">Home</a></li>
+                    <li class="toctree-l1 current">
+<a class="nav-item current" href="./">Introduction to Flux Balance Analysis</a>
+<ul class="subnav">
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fbaIMPLEMENT/">Procedure for creating a metabolic model for FBA</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fbaMATLAB/">FBA in MATLAB</a></li>
+                    <li class="toctree-l1">
+<a class="nav-item" href="../fbaR/">FBA in R</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fvaINTRO/">FVA</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="previous"><a href="..">&laquo; Previous</a></div>
+    <div class="next"><a href="../fbaIMPLEMENT/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> SysBioGTU</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><p><strong> CONTRIBUTORS:</strong> Written: <em>Regan ODONGO</em>, Edited: <em>Tunahan ÇAKIR</em></p>
+<p><strong> Why FBA? </strong></p>
+<p>Biological systems are composed mainly of cells, whose major components are biomolecules such as metabolites, enzymes, and other types of proteins. These components are encapsulated within a bounded system, and act as a unit through several types of physicochemical interactions to achieve the tasks that are required to keep cells alive. To this aim, metabolites are synthesised or broken down through enzymatic interconversions to maintain a constant internal environment (homeostasis). Because of their strong interdependence, changing the rate of conversion of one metabolite to another in the system leads to changes in the rates of enzymatic conversions, termed reactions. Thus, this metabolite interdependent system can be thought of as a network whose nodes are metabolites and edges are reactions. To gain a full understanding of such systems, it is essential to study them as a single unit whose different parts work together to achieve the same goal. </p>
+<p>Flux balance analysis (FBA) is a mathematical approach for predicting rates of reactions, termed fluxes, in a metabolic network to estimate the phenotypic state of a cell (Orth et al., 2010; Rajvanshi &amp; Venkatesh, 2013). It is a holistic approach that can be used to study biological systems at genome scale. In this context, the goal of FBA is to estimate the fluxes through each metabolic reaction in the biological system and, hence, allow for the prediction of systemic metabolic flux changes following a change in the system’s surrounding environment. Although it is subject to some assumptions (see below), predictions from FBA have been shown to mirror real physiological values under controlled experimental conditions with living biological systems.</p>
+<p>FBA approach is based on three major pillars:  </p>
+<p>(i) differential mass balances written around intracellular metabolites in the biological system at steady state, </p>
+<p>(ii) constraints on reaction rates based on reaction reversibility and experimental measurements, </p>
+<p>(iii) a biologically relevant objective function to solve for mass balance derived underdetermined set of equations subject to constraints.  The main advantage here is that FBA only requires reaction stoichiometry and reaction reversibility information, without requiring the difficult-to-measure enzyme kinetics of the enzyme-catalysed reactions (Orth et al., 2010). </p>
+<p>This tutorial provides a step-by-step description of the implementation of FBA for metabolic networks using a toy model. </p>
+<p><strong> References </strong></p>
+<ul>
+<li>
+<p>Orth, J. D., Thiele, I., &amp; Palsson, B. O. (2010). What is flux balance analysis? In Nature Biotechnology (Vol. 28, Issue 3, pp. 245–248).</p>
+</li>
+<li>
+<p>Rajvanshi, M., &amp; Venkatesh, K. V. (2013). Flux Balance Analysis. In Encyclopedia of Systems Biology (pp. 749–752).</p>
+</li>
+</ul></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href=".." title="Home"><span>Previous</span></a></div>
+        <div class="next"><a href="../fbaIMPLEMENT/" title="Procedure for creating a metabolic model for FBA"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

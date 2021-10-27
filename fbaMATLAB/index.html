@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>FBA in MATLAB &mdash; SysBioGTU</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> SysBioGTU</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">Home</a></li>
+                    <li class="toctree-l1">
+<a class="nav-item" href="../fbaINTRO/">Introduction to Flux Balance Analysis</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fbaIMPLEMENT/">Procedure for creating a metabolic model for FBA</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">FBA in MATLAB</a>
+<ul class="subnav">
+</ul></li>
+                    <li class="toctree-l1">
+<a class="nav-item" href="../fbaR/">FBA in R</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fvaINTRO/">FVA</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="previous"><a href="../fbaIMPLEMENT/">&laquo; Previous</a></div>
+    <div class="next"><a href="../fbaR/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> SysBioGTU</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><p><strong> CONTRIBUTORS:</strong> Written: <em>Regan ODONGO</em>, Edited: <em>Tunahan ÇAKIR</em></p>
+<h3 id="procedure-for-using-gurobi-solver-in-matlab-for-fba">Procedure for using Gurobi solver in <strong>MATLAB</strong> for FBA</h3>
+<p>Gurobi solver can used to solve most programming problems. In the linear system we defined above, we seek to solve the following problem: </p>
+<p>
+<script type="math/tex; mode=display">min/max \sum_{i=0}^n f(v_i),</script>
+</p>
+<p>such that </p>
+<p>
+<script type="math/tex; mode=display">S×v \leq b,</script>
+</p>
+<p>
+<script type="math/tex; mode=display">Seq×v = beq,</script>
+</p>
+<p>
+<script type="math/tex; mode=display">lb \leq v \leq ub.</script>
+</p>
+<p>The output of this optimization problem is the vector v, which optimizes the function f. The general implementation steps are as follows:</p>
+<p>
+<script type="math/tex; mode=display">sol=gurobi(model).</script>
+</p>
+<p>Here, the object ‘model’ is a <strong>MATLAB structure</strong> object with the following main fields:</p>
+<ul>
+<li>
+<p><strong>model.A</strong> → An mxn matrix. the S matrix (stoichiometric matrix) must be renamed as model.A and stored as a sparse matrix. Using sparse(S) returns a sparse matrix for the S matrix.</p>
+</li>
+<li>
+<p><strong>model.obj</strong> →  An nx1 vector. The objective function vector, f, explained above must be renamed as model.obj. </p>
+</li>
+<li>
+<p><strong>model.lb</strong> → An nx1 vector. The lower bound vector.</p>
+</li>
+<li>
+<p><strong>model.ub</strong> →  An nx1 vector. The upper bound vector.</p>
+</li>
+<li>
+<p><strong>model.rhs</strong> → A zero  m×1  vector. The right-hand-side vector, b, explained above must be renamed as model.rhs.</p>
+</li>
+<li>
+<p><strong>model.vtype</strong> → An nx1 vector. It is a cell array that can be of ‘B’, ‘C’ or ‘I’ for binary, continuous and integer respectively based on the problem being solved. In FBA, all the unknowns (rates) are continuous. Therefore, all elements of model.vtype is set to ‘C’.</p>
+</li>
+<li>
+<p><strong>model.sense</strong> → An mx1 vector. It is a cell array that can be of ‘=’, ‘&lt;’ or ‘&gt;’ for equality or inequality. It defines the model equality/inequality constraint. In FBA, all the linear set of equations derived from the differential mass balances are equality equations. Therefore, all elements of model.sense is set to ‘=’.</p>
+</li>
+</ul>
+<p>For simplicity, the above object can be defined as follows in MATLAB:</p>
+<pre><code>        model.A = sparse(S);
+
+        model.obj = zeros(1,size(A,1));
+
+        model.lb = lb;
+
+        model.ub = ub;
+
+        model.rhs = zeros(size(A,2),1);
+
+        model.vtype = 'C';
+
+        model.sense = '=';
+</code></pre>
+<p>Finally, running </p>
+<p>
+<script type="math/tex; mode=display">sol=gurobi(model);</script>
+</p>
+<p>will generate an output, ‘sol’, which is a structure object with several fields. The most important fields in the structure object are sol.x, sol.status, and sol.objval, which stores the predicted v vector (the flux vector), whether the obtained solution is optimal (sometimes it might be ‘<strong>INFEASIBLE</strong>’, ‘<strong>SUB-OPTIMAL</strong>’ or ‘<strong>NUMERIC</strong>’. Care should be taken especially for ‘<strong>SUB-OPTIMAL</strong>’ since it also returns a flux vector which is not possible when the status is ‘<strong>NUMERIC</strong>’ or ‘<strong>INFEASIBLE</strong>’) and the value of the objective function, respectively. </p>
+<p>Under circumstances where no optimal solution could be found by the solver, finding the root cause of the problem should begin by checking out numerical consistencies in the defined system constraints. When this does not solve the problem, getting into more advanced troubleshooting approaches using parameter control methods should follow. More detailed information on Gurobi solver parameter control can be found <strong><a href="https://www.gurobi.com/documentation/9.1/refman/parameters.html">here</a></strong>. What should guide the choice of a new parameter is taking into consideration the solver’s default parameters and weighing the cost of each change on the accuracy of the results to be obtained.</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../fbaIMPLEMENT/" title="Procedure for creating a metabolic model for FBA"><span>Previous</span></a></div>
+        <div class="next"><a href="../fbaR/" title="FBA in R"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

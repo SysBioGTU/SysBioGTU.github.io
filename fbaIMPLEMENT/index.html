@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>Procedure for creating a metabolic model for FBA &mdash; SysBioGTU</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> SysBioGTU</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">Home</a></li>
+                    <li class="toctree-l1">
+<a class="nav-item" href="../fbaINTRO/">Introduction to Flux Balance Analysis</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">Procedure for creating a metabolic model for FBA</a>
+<ul class="subnav">
+</ul></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fbaMATLAB/">FBA in MATLAB</a></li>
+                    <li class="toctree-l1">
+<a class="nav-item" href="../fbaR/">FBA in R</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fvaINTRO/">FVA</a></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="previous"><a href="../fbaINTRO/">&laquo; Previous</a></div>
+    <div class="next"><a href="../fbaMATLAB/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> SysBioGTU</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><p><strong> CONTRIBUTORS:</strong> Written: <em>Regan ODONGO</em>, Edited: <em>Tunahan ÇAKIR</em></p>
+<h3 id="fba-implementation-steps">FBA Implementation Steps</h3>
+<ul>
+<li>
+<p><strong>Define the system’s boundary</strong> (e.g. cell wall).</p>
+</li>
+<li>
+<p><strong>Make ready the reaction list, which makes up the metabolic network.</strong> The reactions should be divided into two groups as follows:</p>
+<ul>
+<li>
+<p><strong>Internal reactions</strong> i.e. reactions confined within the system’s boundary. These should be written as well-balanced equations based on their reaction stoichiometries, with reactants on the left-hand side and products on the right-hand side.</p>
+</li>
+<li>
+<p><strong>Exchange reactions</strong> i.e. reactions for metabolites taken up or released outside the system’s boundary</p>
+<p><img alt="Biological System Boundary" src="/images/fba-tutorial/system_fba.jpg" style="height:300px;width:450px" /></p>
+<p>From the figure above, for metabolites, <strong>mA</strong>, entering the system, the reaction is written as:</p>
+<p>
+<script type="math/tex; mode=display">\to m_A</script>
+</p>
+<p>i.e. <strong>metabolite A</strong> is introduced into the system from outside the system’s boundary (an <strong>uptake reaction</strong>).</p>
+<p>On the other hand, for metabolites leaving the system, <strong>mB</strong> and <strong>mC</strong>, the reaction is written as:</p>
+<p>
+<script type="math/tex; mode=display">\to m_B</script>
+</p>
+<p>
+<script type="math/tex; mode=display">\to m_C</script>
+</p>
+<p>i.e. <strong>metabolite B</strong> and <strong>C</strong> are secreted out of the system.</p>
+<p>For the system defined in the figure above, the set of reactions in the system can be written as:</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+\to m_A \qquad... \qquad{R_1}\\
+{m_A} {\leftrightarrow} {m_B}  \qquad... \qquad{R_2}\\
+{m_A} \leftrightarrow {m_C}  \qquad... \qquad{R_3}\\
+{m_B} \rightarrow  \qquad... \qquad{R_4}\\
+{m_C} \rightarrow \qquad... \qquad{R_5}
+\end{align}</script>
+</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Write differential mass balances around intracellular metabolites.</strong></p>
+<p>For each intracellular metabolite, its amount within the system boundary (within the cell) will be increased by the reactions that produce it while the corresponding amount/pool will be consumed up by the reactions that use it as a substrate. That is, the intracellular metabolite concentrations over time will change as a function of the reaction rates that consume or produce them. This can be represented as a series of differential mass balances around intracellular metabolites as shown below:</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+\frac{dm_A}{dt} &= R_1 - R_2 - R_3 \\
+\frac{dm_B}{dt} &= R_2 - R_4\\
+\frac{dm_C}{dt} &= R_3 - R_5
+\end{align}</script>
+</p>
+<p>The major assumption made by FBA is steady-state assumption. That is, there won’t be any net accumulation of intracellular metabolites over sufficiently long time. Under this assumption, the right-hand side of the equations above will be zero, leading to a system of linear equations to be solved for the prediction of metabolic fluxes (reaction rates).</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+R_1 - R_2 - R_3 &= 0 \\
+R_2 - R_4 &= 0\\
+R_3 - R_5 &= 0
+\end{align}</script>
+</p>
+</li>
+<li>
+<p><strong>Represent the set of equations derived from mass balances in matrix format. </strong></p>
+<p>The system of linear equations derived above can be represented in matrix format as given below. 
+<script type="math/tex; mode=display">\begin{align}
+S.v &= b 
+\end{align}</script>
+</p>
+<p>
+<script type="math/tex; mode=display">
+\left\{ 
+\begin{array}{c}
+{S_{11}}{v_1} +  {S_{12}}{v_2} + ... {S_{1n}}{v_n} = 0 \\
+ {S_{21}}{v_1} +  {S_{22}}{v_2} + ... {S_{2n}}{v_n} = 0 \\
+ ........... \\
+ {S_{m1}}{v_1} +  {S_{m2}}{v_2} + ... {S_{mn}}{v_n} = 0
+\end{array}
+\right. 
+</script>
+</p>
+<p>and for the example given previously,</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+R_1 - R_2 - R_3 &= 0 \\
+R_2 - R_4 &= 0\\
+R_3 - R_5 &= 0
+\end{align}</script>
+</p>
+<p>The coefficients of unknowns in those equations indeed correspond to the stoichiometric coefficients of metabolites in the reaction list. </p>
+<ul>
+<li><strong>Create a right-hand side zero vector (b)</strong>. Its dimension must be m×1</li>
+</ul>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+b &= \left( 0 \qquad0 \qquad0\right)
+\end{align}</script>
+</p>
+<p>for each of the mass balance equations <script type="math/tex; mode=display">\frac{dm_A}{dt}</script>
+<script type="math/tex; mode=display">\frac{dm_B}{dt}</script>
+<script type="math/tex; mode=display">\frac{dm_C}{dt}</script>
+</p>
+<ul>
+<li><strong>Construct the stoichiometric matrix</strong> (e.g. in Excel). In this matrix, the rows represent the metabolites while the columns represent the reactions. For a system with m metabolites and n reactions, the resultant stoichiometric/coefficient matrix will have an m×n dimension. Care should be taken to ensure that the coefficient values are correctly defined to avoid errors in subsequent steps. For every reaction, the stoichiometric coefficient values of metabolites produced by the reaction are declared with positive values while those for metabolites consumed by the reaction are declared with negative values. All other metabolites are assigned with zero values for that reaction (column) in the stoichiometric matrix. Following is an example of a stoichiometric matrix derived from the system of linear equations defined in the previous step:</li>
+</ul>
+<p>For convenience, such small networks, after defining in Excel worksheet, can be saved as a MATLAB object in a .mat file object format. An alternative is to use R, which we describe later. In MATLAB, this can be done as follows:</p>
+<pre><code>- Load the Excel file using stoichMat = xlsread(‘filename.xlsx’), assuming the file is named as ‘filename.xlsx’.
+
+- Next, use save(‘stoichMat.mat’,’ stoichMat’,’mat’) to save the matrix as a .mat file object. Note that should the input file be large, other options in the ‘save’ function would be needed.
+
+- This .mat file can be introduced into the working space memory of MATLAB using the ‘load’ function, e.g.load(‘stoichMat.mat’).
+</code></pre>
+</li>
+<li>
+<p><strong>Define the other system constraints: Three main constraints are defined</strong>: mass-balance based stoichiometric constraints, reversibility constraints and measurement constraints:</p>
+<ul>
+<li>
+<p><strong>Stoichiometric constraint</strong>: already defined using the stoichiometric matrix as explained above. Care must be taken as numerical problems may be experienced should the stoichiometric matrix be wrongly defined.</p>
+</li>
+<li>
+<p><strong>Reversibility constraints</strong>: Here, two vectors, lower-bound vector and upper-bound vector are constructed to define the lower and upper bounds of the rates of reactions in the system based on reaction irreversibility. If the system has n reactions, the dimensions of the resulting vectors will be n×1. Based on reaction irreversibility, for a reversible reaction, R~i, lb~i=-Infinity while the ub_i=+Infinity. On the other hand, if the reaction is an irreversible reaction, then, lb_i=0 while the ub_i=+Infinity. It is always better to use large values such as 1,000 in place of infinity. </p>
+</li>
+<li>
+<p><strong>Measurement Constraints</strong>: If a measured physiological flux rate is available, the index of the corresponding reaction(s) in the ub and lb vectors should be defined using this value. For instance, if R_1is measured as 3 mmol/gram dry weight/hr, the ub and lb will be defined as follows:</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{array}{c|lcr}
+ & {V_1} & {V_2} & {V_3}& {V_4}& {V_5} \\
+\hline
+{m_A} & 1 & -1& -1 & 0 & 0 \\
+{m_B} & 0 & 1& 0 & -1 & 0  \\
+{m_C} & 0 & 0& 1 & 0 & -1 
+\end{array}
+</script>
+</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Optimize the system based on the defined constraints</strong>. The example defined above is a typical linear system of equations that can be solved by most optimization programs. The MATLAB’s optimization toolbox has a base linprog function for handling such linear programming problems. This function, however, is less robust for the case of more complex models (e.g. those with over 30 reactions). Instead, GLPK solver can be used for such models. This is a free linear programming solver with a MATLAB interface. To install it in MATLAB, download the latest version form this link: http://sourceforge.net/projects/glpkmex/files/glpkmex/2.11/. Unzip the file into a folder and add the folder to the MATLAB’s current path by following File -&gt; SetPath in the MATLAB menu bar and browsing to find right folder. A rather much stable solver is Gurobi that can be found here: https://www.gurobi.com/downloads/gurobi-optimizer-eula/. A free 3-month academic license can be obtained by signing up using your institutional (university given) e-mail address in this link: https://www.gurobi.com/academia/academic-program-and-licenses/. As compared to other solvers, Gurobi is much easier to use as shown below.</p>
+<p><strong>Please see how this can be done in <a href="../fbaMATLAB/">MATLAB</a> and <a href="../fbaR/">R</a></strong></p>
+</li>
+</ul></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../fbaINTRO/" title="Introduction to Flux Balance Analysis"><span>Previous</span></a></div>
+        <div class="next"><a href="../fbaMATLAB/" title="FBA in MATLAB"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>

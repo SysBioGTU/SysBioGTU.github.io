@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <title>FVA &mdash; SysBioGTU</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href=".." class="site-name"> SysBioGTU</a>
+                </div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="..">Home</a></li>
+                    <li class="toctree-l1">
+<a class="nav-item" href="../fbaINTRO/">Introduction to Flux Balance Analysis</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fbaIMPLEMENT/">Procedure for creating a metabolic model for FBA</a></li>
+                    <li class="toctree-l1"><a class="nav-item" href="../fbaMATLAB/">FBA in MATLAB</a></li>
+                    <li class="toctree-l1">
+<a class="nav-item" href="../fbaR/">FBA in R</a></li>
+                    <li class="toctree-l1 current"><a class="nav-item current" href="./">FVA</a>
+<ul class="subnav">
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="previous"><a href="../fbaR/">&laquo; Previous</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href=".." class="site-name"> SysBioGTU</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    
+</ul>
+</nav>
+                <div id="content"><p><strong> CONTRIBUTORS:</strong> Written: <em>Regan ODONGO</em>, Edited: <em>Tunahan ÇAKIR</em></p>
+<h3 id="flux-variability-analysis-fva">Flux Variability Analysis (FVA)</h3>
+<p>In genome scale metabolic modelling, the set system's objective function can often be achieved through alternative metabolic reactions. For instance, if growth (biomass accumulation) is used as the reaction to be maximized/minimized, there might exist several alternative metabolic flux solutions that can give the same objective value due to biological functional heterogeneity, especially for solutions obtained using linear programming (LP). In such situations, only the objective function solution is unique. Thus, it is ideal to investigate and characterize flux variability of the system i.e., to find the maximum and minimum values of each flux that can achieve the same objective value. This is particularly useful when performing metabolic engineering of cellular system as it highlights important factors to be considered in advance.</p>
+<p>An illustrated explanation of FVA is provided with our <a href="../valinoSim/">Valino simulation tutorial</a>. </p>
+<p>Given a COBRA model: model, and the reaction at location X in the model, whose maximum/minimum flux has been determined using LP, FVA can be calculated using the following lines of code in MATLAB with Gurobi solver:</p>
+<pre><code>model.lb(X)= maximum/minimum value of X;
+model.ub(X)= maximum/minimum value of X;
+for i=1:length(model.A(1,:))
+    model.obj=zeros(length(model.A(1,:)),1);
+    model.obj(i)=1;
+    Vmin=gurobi(model,params);
+    model.obj(i)=-1;
+    Vmax=gurobi(model);
+    FVA(i,:)=([Vmin.x(i) Vmax.x(i)]);
+end
+</code></pre>
+<p>Where, Vmax and Vmin are the maximum and minimum fluxes through each reaction in the model and FVA the matrix holding all the solutions.</p>
+<p><strong>Reference</strong></p>
+<ul>
+<li>Mahadevan R., and Schilling C.H., (2003). The effects of alternate optimal solutions in constraint-based genome-scale metabolic models, Metabolic Engineering (Vol. 5, Issue 4, pp. 264-276)</li>
+</ul></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../fbaR/" title="FBA in R"><span>Previous</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+    <script src="../search/main.js"></script>
+</body>
+
+</html>
